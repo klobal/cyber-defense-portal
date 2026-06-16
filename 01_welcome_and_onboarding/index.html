@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <title>Universal Cyber Defense Desk — Incident Intake System Gate</title>
+    <style>
+        /* --- DESIGN SYSTEM CORE VARIABLES --- */
+        :root {
+            --bg-base: #030712;
+            --bg-surface: #0b1329;
+            --bg-card: #111c44;
+            --accent-cyan: #06b6d4;
+            --accent-emerald: #10b981;
+            --accent-crimson: #ef4444;
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --border-glow: rgba(6, 182, 212, 0.15);
+            --border-standard: rgba(255, 255, 255, 0.08);
+            --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+        }
+
+        /* --- GLOBAL ELEMENT RESETS --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 40px;
+            overflow-x: hidden;
+        }
+
+        /* --- LAYOUT WRAPPERS --- */
+        .system-container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* --- HEADER BLOCK --- */
+        header {
+            border-bottom: 2px solid var(--accent-cyan);
+            padding-bottom: 20px;
+            margin-bottom: 10px;
+        }
+
+        .system-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -0.05em;
+            text-transform: uppercase;
+            background: linear-gradient(90deg, #ffffff, var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .system-telemetry {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--accent-cyan);
+            margin-top: 6px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* --- GUIDANCE GUIDE / MENTOR MODULE --- */
+        .guide-box {
+            background: rgba(6, 182, 212, 0.03);
+            border-left: 4px solid var(--accent-cyan);
+            border-top: 1px solid var(--border-standard);
+            border-right: 1px solid var(--border-standard);
+            border-bottom: 1px solid var(--border-standard);
+            padding: 24px;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .guide-box h2 {
+            font-family: var(--font-mono);
+            font-size: 1rem;
+            text-transform: uppercase;
+            color: #ffffff;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .guide-box p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* --- ANONYMITY AND PRIVACY COMPLIANCE CONTROLLER --- */
+        .anonymity-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--accent-crimson);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 10px;
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.05);
+        }
+
+        .control-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .control-label-block {
+            max-width: 80%;
+        }
+
+        .control-label-block h3 {
+            font-family: var(--font-mono);
+            font-size: 1.1rem;
+            color: var(--accent-crimson);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .control-label-block p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        /* Pure CSS Custom Switch Toggle */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+            flex-shrink: 0;
+        }
+
+        .switch input { 
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #374151;
+            transition: .3s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--accent-crimson);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* --- SPLIT SCREEN CHRONOLOGICAL ROUTING DECK --- */
+        .routing-deck {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 10px;
+        }
+
+        .route-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-standard);
+            border-radius: 12px;
+            padding: 32px;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .route-card:hover {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 25px var(--border-glow);
+            transform: translateY(-2px);
+        }
+
+        .route-card.selected {
+            border-color: var(--accent-emerald) !important;
+            background: linear-gradient(145deg, var(--bg-surface), #081d17);
+            box-shadow: 0 0 25px rgba(16, 185, 129, 0.1);
+        }
+
+        .route-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .route-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .infrastructure-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+        }
+
+        .tag {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-standard);
+            padding: 4px 10px;
+            border-radius: 4px;
+            color: var(--text-primary);
+        }
+
+        .route-card.selected .tag {
+            border-color: rgba(16, 185, 129, 0.3);
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        /* --- SYSTEMIC COMPLIANCE VERIFICATION CHECKLIST --- */
+        .compliance-box {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-standard);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .checkbox-container input {
+            margin-top: 4px;
+            transform: scale(1.2);
+            cursor: pointer;
+        }
+
+        .checkbox-container strong {
+            color: var(--text-primary);
+        }
+
+        /* --- THE INMUTABLE NAVIGATION GATEWAY --- */
+        .navigation-gate {
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-standard);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .alias-banner {
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            color: var(--accent-crimson);
+            display: none;
+        }
+
+        .btn-gate {
+            background-color: #374151;
+            color: #9ca3af;
+            font-family: var(--font-mono);
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 16px 36px;
+            border: none;
+            border-radius: 6px;
+            cursor: not-allowed;
+            transition: all 0.2s ease;
+        }
+
+        .btn-gate.unlocked {
+            background-color: var(--accent-cyan);
+            color: #030712;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
+        }
+
+        .btn-gate.unlocked:hover {
+            background-color: #22d3ee;
+            box-shadow: 0 0 25px rgba(6, 182, 212, 0.5);
+        }
+
+        /* --- PRINT OVERRIDES --- */
+        @media print {
+            body { background: #fff; color: #000; padding: 0; }
+            .anonymity-card, .compliance-box, .navigation-gate { display: none !important; }
+            .route-card { border: 1px solid #000 !important; background: #fff !important; color: #000 !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="system-container">
+        
+        <!-- SYSTEM MATRIX HEADLINE -->
+        <header>
+            <h1 class="system-title">Universal Cyber Defense &amp; Incident Intake System</h1>
+            <div class="system-telemetry">
+                <span>TERMINAL STATUS: ACTIVE SECURE SESSION</span>
+                <span id="live-clock">SYSTEM DATE TRACK: LOADING ENVIRONMENT...</span>
+            </div>
+        </header>
+
+        <!-- HUMAN FACTOR DESK MENTOR GUIDE -->
+        <div class="guide-box">
+            <h2>💡 System Desk Guide: Initialization Protocols</h2>
+            <p>
+                Welcome the individual seeking assistance. Inform them that this workspace is structurally private and complies with the Kenya Data Protection Act. If they fear retribution, internal system compromise, or state identification exposure, activate the **Absolute Anonymity Override** before proceeding. If they choose standard logging, determine their demographic affiliation to establish the correct legal, cross-border, and evidentiary pipeline.
+            </p>
+        </div>
+
+        <!-- STAGE 0A: ANONYMITY CONFIGURATOR SWITCH -->
+        <div class="anonymity-card">
+            <div class="control-row">
+                <div class="control-label-block">
+                    <h3>Absolute Anonymity &amp; Token Overwrite Option</h3>
+                    <p>Activating this module immediately deletes all real-name identity fields from browser cache. The system will auto-assign a permanent cryptographic operational token alias for all generated law enforcement evidence abstracts.</p>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="anonymity-toggle" onchange="processAnonymityState()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <!-- STAGE 0B: CHRONOLOGICAL DEMOGRAPHIC SELECTION (SPLIT SCREEN) -->
+        <div class="routing-deck">
+            
+            <!-- VEC 1: KENYAN CITIZEN ROUTE -->
+            <div class="route-card" id="card-citizen" onclick="selectDemographicRoute('CITIZEN')">
+                <div>
+                    <h3>Kenyan National Status Profile <span style="font-size:1.1rem; color:var(--accent-cyan);">[ROUTE 01]</span></h3>
+                    <p>Select this processing path for domestic residents. This triggers input mapping fields tailored for the Kenyan National Identification Number (ID), Alien Card tracking arrays, and direct validation integration references.</p>
+                </div>
+                <div class="infrastructure-tags">
+                    <span class="tag">National ID Mapping</span>
+                    <span class="tag">IPRS Check-Ready</span>
+                    <span class="tag">M-Pesa API Audit Path</span>
+                    <span class="tag">CAP 75 Compliance</span>
+                </div>
+            </div>
+
+            <!-- VEC 2: NON-CITIZEN ROUTE -->
+            <div class="route-card" id="card-noncitizen" onclick="selectDemographicRoute('NON_CITIZEN')">
+                <div>
+                    <h3>Foreign National / Non-Citizen Profile <span style="font-size:1.1rem; color:var(--accent-cyan);">[ROUTE 02]</span></h3>
+                    <p>Select this path for tourists, foreign workers, international students, or cross-border corporate investors. This routes tracking via International Passport Strings, e-Visa references, and Immigration clearance codes.</p>
+                </div>
+                <div class="infrastructure-tags">
+                    <span class="tag">International Passport Map</span>
+                    <span class="tag">e-Visa Tracking Tag</span>
+                    <span class="tag">Interpol Signal Map</span>
+                    <span class="tag">Cross-Border Fraud Vault</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- STAGE 0C: UNPASSABLE PRE-ONBOARDING COMPLIANCE ASSURANCE -->
+        <div class="compliance-box">
+            <label class="checkbox-container">
+                <input type="checkbox" id="compliance-lock" onchange="evaluateSystemGateUnlock()">
+                <div>
+                    <strong>Mandatory Multi-Screen Progression &amp; Fee Disclosure Consent:</strong><br>
+                    I acknowledge that this intake terminal relies on a strict chronological, multi-page data environment. I understand that the next screen exposes complete asset protection definitions, followed directly by an **itemized, upfront transparent diagnostic tariff ledger**. I confirm no data intake can be skipped or bypassed before pricing terms are explicitly reviewed.
+                </div>
+            </label>
+        </div>
+
+        <!-- STAGE 0D: CONSOLE GATEWAY NAVIGATION SYSTEM -->
+        <div class="navigation-gate">
+            <div class="alias-banner" id="alias-alert-display">
+                [SYSTEM ACTION]: CRITICAL IDENTITY FIELD OVERWRITE ACTIVE. GENERATED OPERATIONAL ALIAS: <span id="alias-string">NULL</span>
+            </div>
+            <div id="fallback-spacer" style="flex-grow: 1;"></div>
+            <button class="btn-gate" id="system-gate-button" onclick="executeChronologicalTransition()" disabled>Proceed to Value Proposition ➔</button>
+        </div>
+
+    </div>
+
+    <!-- --- CORE IMMUTABLE DATA ARCHITECTURE INTERNALS --- -->
+    <script>
+        // Set hardcoded production time tracking metric
+        const systemTargetDate = "2026-06-16 02:58:26 EAT";
+        document.getElementById('live-clock').textContent = `SYSTEM CHRONO TELEMETRY: ${systemTargetDate}`;
+
+        // Local state machine tracking values
+        let state_selectedRoute = "";
+        let state_anonymityActive = false;
+        let state_computedAlias = "";
+
+        // Function to assign active states to demographic paths
+        function selectDemographicRoute(routeType) {
+            state_selectedRoute = routeType;
+            
+            // UI Element Updates
+            document.getElementById('card-citizen').classList.remove('selected');
+            document.getElementById('card-noncitizen').classList.remove('selected');
+            
+            if(routeType === 'CITIZEN') {
+                document.getElementById('card-citizen').classList.add('selected');
+            } else if (routeType === 'NON_CITIZEN') {
+                document.getElementById('card-noncitizen').classList.add('selected');
+            }
+
+            evaluateSystemGateUnlock();
+        }
+
+        // Action block managing the anonymity state transition
+        function processAnonymityState() {
+            const isChecked = document.getElementById('anonymity-toggle').checked;
+            state_anonymityActive = isChecked;
+            
+            const banner = document.getElementById('alias-alert-display');
+            const spacer = document.getElementById('fallback-spacer');
+            const aliasTxt = document.getElementById('alias-string');
+
+            if(isChecked) {
+                // Generate secure local unique tracking token to isolate from real identities
+                const randomHex = Math.floor(Math.random() * 0xFFFFFFFF).toString(16).toUpperCase().padStart(8, '0');
+                state_computedAlias = `CPS-NBI-2026-${randomHex}`;
+                
+                aliasTxt.textContent = state_computedAlias;
+                banner.style.display = "block";
+                spacer.style.display = "none";
+            } else {
+                state_computedAlias = "";
+                banner.style.display = "none";
+                spacer.style.display = "block";
+            }
+        }
+
+        // Evaluator matching logic checkboxes against the state gate button
+        function evaluateSystemGateUnlock() {
+            const isComplianceChecked = document.getElementById('compliance-lock').checked;
+            const gateButton = document.getElementById('system-gate-button');
+
+            if(state_selectedRoute !== "" && isComplianceChecked) {
+                gateButton.removeAttribute('disabled');
+                gateButton.classList.add('unlocked');
+            } else {
+                gateButton.setAttribute('disabled', 'true');
+                gateButton.classList.remove('unlocked');
+            }
+        }
+
+        // Compiles properties directly to native browser memory before navigation execution
+        function executeChronologicalTransition() {
+            const isComplianceChecked = document.getElementById('compliance-lock').checked;
+            
+            // Safety enforcement logic check
+            if(!state_selectedRoute || !isComplianceChecked) {
+                alert("Security Bypass Detected: You must confirm compliance rules and select a user route path.");
+                return;
+            }
+
+            // Write all technical variables down the storage chain
+            sessionStorage.setItem('session_active_status', 'true');
+            sessionStorage.setItem('initial_intake_timestamp', new Date().toISOString());
+            sessionStorage.setItem('user_demographic_route', state_selectedRoute);
+            sessionStorage.setItem('identity_disclosure_tier', state_anonymityActive ? 'TOTAL_ANONYMITY' : 'FULL_DISCLOSURE');
+            sessionStorage.setItem('encrypted_operational_alias', state_computedAlias);
+            sessionStorage.setItem('pre_onboarding_financial_acknowledgment', 'false');
+
+            // Route forward to Phase 1 Screen 2
+            window.location.href = 'value_proposition.html';
+        }
+    </script>
+</body>
+</html>
